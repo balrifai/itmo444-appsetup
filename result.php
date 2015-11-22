@@ -1,9 +1,19 @@
 <?php
 // Start the session
+echo "Session starting";
 session_start();
 // In PHP versions earlier than 4.1.0, $HTTP_POST_FILES should be used instead
 // of $_FILES.
-echo $_POST['useremail'];
+//get info from form
+var_dump($_POST);
+	if(!empty($_POST)){
+	echo $_POST['username'];
+	echo $_POST['telephone'];
+	echo $_POST['email'];
+	}
+	else {
+	echo "No information found in form";
+	}
 $uploaddir = '/tmp/';
 $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 echo '<pre>';
@@ -22,7 +32,7 @@ $s3 = new Aws\S3\S3Client([
     'version' => 'latest',
     'region'  => 'us-east-1'
 ]);
-$bucket = uniqid("php-jrh-",false);
+$bucket = uniqid("balrifai-php",false);
 #$result = $client->createBucket(array(
 #    'Bucket' => $bucket
 #));
