@@ -1,69 +1,35 @@
 <?php
-// Start the session^M
-require 'vendor/autoload.php';
+// Start the session
+require 'var/www/html/vendor/autoload.php';
 $rds = new Aws\Rds\RdsClient([
     'version' => 'latest',
     'region'  => 'us-east-1'
 ]);
-$result = $rds->createDBInstance([
-    'AllocatedStorage' => 10,
-    #'AutoMinorVersionUpgrade' => true || false,
-    #'AvailabilityZone' => '<string>',
-    #'BackupRetentionPeriod' => <integer>,
-   # 'CharacterSetName' => '<string>',
-   # 'CopyTagsToSnapshot' => true || false,
-   # 'DBClusterIdentifier' => '<string>',
-    'DBInstanceClass' => 'db.t1.micro', // REQUIRED
-    'DBInstanceIdentifier' => 'mp1-jrh', // REQUIRED
-    'DBName' => 'customerrecords',
-    #'DBParameterGroupName' => '<string>',
-    #'DBSecurityGroups' => ['<string>', ...],
-    #'DBSubnetGroupName' => '<string>',
-    'Engine' => 'MySQL', // REQUIRED
-    'EngineVersion' => '5.5.41',
-    #'Iops' => <integer>,
-    #'KmsKeyId' => '<string>',
-   # 'LicenseModel' => '<string>',
-  'MasterUserPassword' => 'letmein888',
-    'MasterUsername' => 'controller',
-    #'MultiAZ' => true || false,
-    #'OptionGroupName' => '<string>',
-    #'Port' => <integer>,
-    #'PreferredBackupWindow' => '<string>',
-    #'PreferredMaintenanceWindow' => '<string>',
-    'PubliclyAccessible' => true,
-    #'StorageEncrypted' => true || false,
-    #'StorageType' => '<string>',
-   # 'Tags' => [
-   #     [
-   #         'Key' => '<string>',
-   #         'Value' => '<string>',
- #     ],
-        // ...
-   # ],
-    #'TdeCredentialArn' => '<string>',
-    #'TdeCredentialPassword' => '<string>',
-   # 'VpcSecurityGroupIds' => ['<string>', ...],
-]);
-print "Create RDS DB results: \n";
-# print_r($rds);
-$result = $rds->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'mp1-jrh',
-]);
-// Create a table 
+
 $result = $rds->describeDBInstances([
-    'DBInstanceIdentifier' => 'mp1-jrh',
+    'DBInstanceIdentifier' => 'itmo444-mp1',
 ]);
+$rds->waitUntil('DBInstanceAvailable',['DBInstanceIdentifier' => 'itmo444-mp1',]);
+
 $endpoint = $result['DBInstances'][0]['Endpoint']['Address'];
 print "============\n". $endpoint . "================\n";
-$link = mysqli_connect($endpoint,"controller","letmein888","3306") or die("Error " . mysqli_error($link)); 
+$link = mysqli_connect($endpoint,"balrifai","ilovebunnies","balrifai",3306) or die("Error " . mysqli_error($link)); 
 echo "Here is the result: " . $link;
-$sql = "CREATE TABLE comments 
+
+$sql = "CREATE TABLE IF NOT EXISTS User 
 (
 ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-PosterName VARCHAR(32),
-Title VARCHAR(32),
-Content VARCHAR(500)
+email VARCHAR(20),
+username VARCHAR(20),
+telephone VARCHAR(20),
+raws3url VARCHAR(256),
+finished3url VARCHCAR(256),
+filename VARCHAR(256),
+state TINYINT(3),
+datetime VARCHAR
+
 )";
-$con->query($sql);
+$link->query($sql);
+shell-exec("chmod 600 setup.php");
 
 ?>
